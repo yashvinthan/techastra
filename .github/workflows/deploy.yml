@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,10 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -30,42 +27,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build Techastra-CodeRescue
-        run: |
-          cd Techastra-CodeRescue
-          npm install
-          npm run build
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Build portfolio-inner-site
-        run: |
-          cd portfolio-inner-site
-          npm install
-          mkdir -p public/coderescue
-          cp -r ../Techastra-CodeRescue/dist/* public/coderescue/
-          npm run build
+      - name: Build Techastra Platform
+        run: npm run build
 
-      - name: Build portfolio-website
-        run: |
-          cd portfolio-website
-          npm install
-          npm run build
-
-      - name: Assemble Unified Static Site
-        run: |
-          mkdir -p _site/os
-          cp -r portfolio-website/public/* _site/
-          cp -r portfolio-inner-site/build/* _site/os/
-          touch _site/.nojekyll
-          cp _site/index.html _site/404.html
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages Branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
