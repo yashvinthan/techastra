@@ -185,6 +185,18 @@ const CodeRescueApp: React.FC<CodeRescueAppProps> = (props) => {
         props.onClose();
     };
 
+    const arenaUrl = React.useMemo(() => {
+        try {
+            const href = window.location.href.split('?')[0].split('#')[0];
+            const baseDir = href.endsWith('/')
+                ? href
+                : href.substring(0, href.lastIndexOf('/') + 1);
+            return `${baseDir}coderescue/index.html`;
+        } catch {
+            return './coderescue/index.html';
+        }
+    }, []);
+
     return (
         <Window
             top={top}
@@ -203,7 +215,7 @@ const CodeRescueApp: React.FC<CodeRescueAppProps> = (props) => {
             <div style={styles.container}>
                 <iframe
                     ref={iframeRef}
-                    src="./coderescue/index.html"
+                    src={arenaUrl}
                     title="Code Rescue Arena"
                     allow="fullscreen"
                     allowFullScreen={true}

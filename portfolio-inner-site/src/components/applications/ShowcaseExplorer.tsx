@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { MemoryRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../showcase/Home';
 import About from '../showcase/About';
 import Window from '../os/Window';
@@ -30,7 +30,7 @@ const ShowcaseExplorer: React.FC<ShowcaseExplorerProps> = (props) => {
             minimizeWindow={props.onMinimize}
             bottomLeftText={'© 2026 Techastra Symposium • Code Rescue Challenge'}
         >
-            <Router>
+            <Router initialEntries={['/']}>
                 <div className="site-page">
                     <VerticalNavbar />
                     <Routes>
@@ -48,6 +48,7 @@ const ShowcaseExplorer: React.FC<ShowcaseExplorerProps> = (props) => {
                             element={<MusicProjects />}
                         />
                         <Route path="/projects/art" element={<ArtProjects />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>
             </Router>
