@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Playwright & temp test files
+.playwright-mcp/
+current_3d_room.png
+current_room_3d.png
+inner_os_verified.png
+start_popup_fixed.png
+
+# Build artifacts
+dist_unified/
+portfolio-inner-site/build/
+Techastra-CodeRescue/dist/
+
+# Logs & temp
+*.log
+.DS_Store
+Thumbs.db
+**/.git_old/
