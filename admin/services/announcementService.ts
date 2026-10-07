@@ -56,7 +56,28 @@ export class AnnouncementService {
         const trimmed = message.trim();
         if (!trimmed) return;
 
-        // Persist to backend database and trigger real-time SSE broadcast
+        const newAnnouncement: Announcement = {
+            id: 'ann_' + Date.now(),
+            text: trimmed,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            author,
+            targetRound: roundTarget,
+            priority: roundTarget === 'ALL' ? 'NORMAL' : 'HIGH',
+        };
+
+        // Add locally immediately
+        this.addAnnouncement(newAnnouncement);
+
+        // Broadcast across tabs via BroadcastChannel
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+            try {
+                const bc = new BroadcastChannel('techastra_telemetry');
+                bc.postMessage({ type: 'ANNOUNCEMENT_BROADCAST', payload: newAnnouncement });
+                bc.close();
+            } catch {}
+        }
+
+        // Persist to backend database and trigger real-time SSE broadcast if online
         fetch('/api/announcements', {
             method: 'POST',
             headers: {

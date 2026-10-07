@@ -103,6 +103,14 @@ export class RoundService {
 
         if (changed) this.notify();
 
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+            try {
+                const bc = new BroadcastChannel('techastra_telemetry');
+                bc.postMessage({ type: 'ROUND_CUTOFF_UPDATED', payload: { roundId, cutoff: newCutoff } });
+                bc.close();
+            } catch {}
+        }
+
         // Persist to backend database
         fetch(`/api/rounds/${roundId}`, {
             method: 'PUT',
@@ -122,6 +130,14 @@ export class RoundService {
             isActive: r.roundId === roundId,
         }));
         this.notify();
+
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+            try {
+                const bc = new BroadcastChannel('techastra_telemetry');
+                bc.postMessage({ type: 'ROUND_STATE_UPDATE', roundId });
+                bc.close();
+            } catch {}
+        }
 
         // Persist to backend database
         fetch(`/api/rounds/${roundId}`, {

@@ -23,6 +23,22 @@ export class AdminAuthService {
             return { success: false, error: 'Administrator ID and Passkey are required.' };
         }
 
+        // Static fallback coordinators for offline or GitHub Pages hosting
+        const staticAdmins = [
+            {
+                id: 'admin',
+                passkey: 'techastra2026',
+                name: 'Chief Event Coordinator',
+                role: 'ADMINISTRATOR' as const,
+            },
+            {
+                id: 'coderescue@techastra.drmgrdu.ac.in',
+                passkey: 'TechDay26',
+                name: 'Code Rescue Event Coordinator',
+                role: 'ADMINISTRATOR' as const,
+            },
+        ];
+
         try {
             const response = await fetch('/api/admin/login', {
                 method: 'POST',
@@ -52,8 +68,28 @@ export class AdminAuthService {
                 const errData = await response.json().catch(() => ({}));
                 return { success: false, error: errData.error || 'Access Denied: Invalid Administrator ID or Passkey.' };
             }
+            // If response is 404 (GitHub Pages static host), fall through to static verification
         } catch (netErr) {
-            return { success: false, error: 'Authentication Server Offline. Contact Network Admin.' };
+            // Server offline or network error - fall through to static verification
+        }
+
+        // Static fallback verification (GitHub Pages / offline mode)
+        const matched = staticAdmins.find(
+            (c) => c.id.toLowerCase() === trimmedId.toLowerCase() && c.passkey === trimmedPasskey
+        );
+
+        if (matched) {
+            const user: AdminUser = {
+                id: matched.id,
+                username: matched.id,
+                name: matched.name,
+                role: matched.role,
+                token: 'static_session_' + Date.now(),
+                authenticatedAt: new Date().toISOString(),
+            };
+            this.saveSession(user);
+            this.startInactivityWatch();
+            return { success: true, user };
         }
 
         return { success: false, error: 'Access Denied: Invalid credentials.' };
