@@ -4,6 +4,9 @@
     "description": "Techastra 2026 — 3D Workstation, Windows 95 Desktop OS, Code Rescue Arena, and Coordinator Admin Center",
     "repository": "https://github.com/yashvinthan/techastra.git",
     "license": "UNLICENSED",
+    "engines": {
+        "node": ">=22.0.0"
+    },
     "scripts": {
         "start": "node server/index.js",
         "build": "webpack --config ./bundler/webpack.admin.js && node scripts/deploy-admin.js && npm --prefix coderescue run build && node scripts/deploy-coderescue.js && webpack --config ./bundler/webpack.prod.js",

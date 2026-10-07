@@ -19,6 +19,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+// Health check endpoint for cloud hosting platforms (Render, Railway, Fly.io)
+app.get(['/health', '/api/health'], (req, res) => {
+    res.json({
+        status: 'UP',
+        service: 'Techastra 2026 Core Live Server',
+        timestamp: new Date().toISOString(),
+        uptimeSeconds: Math.floor(process.uptime()),
+    });
+});
+
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(express.static(path.resolve(__dirname, '../static')));
