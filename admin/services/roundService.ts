@@ -191,11 +191,21 @@ export class RoundService {
                 },
                 body: JSON.stringify(payload),
             });
-            const data = await res.json();
-            if (data && data.success) {
-                return { success: true, schedule: data.schedule };
+            const ct = res.headers.get('content-type') || '';
+            if (res.ok && ct.includes('application/json')) {
+                const data = await res.json();
+                if (data && data.success) {
+                    return { success: true, schedule: data.schedule };
+                }
+                return { success: false, error: data?.error || 'Failed to update schedule' };
             }
-            return { success: false, error: data?.error || 'Failed to update schedule' };
+            if (res.status === 401) {
+                return { success: false, error: 'Unauthorized: Admin session expired or invalid. Please click LOGOUT and log back in.' };
+            }
+            const text = await res.text().catch(() => '');
+            let errJson: any = null;
+            try { errJson = JSON.parse(text); } catch {}
+            return { success: false, error: errJson?.error || `Server error (${res.status}). Verify connection to live backend.` };
         } catch (e: any) {
             return { success: false, error: e?.message || 'Network error updating schedule' };
         }
