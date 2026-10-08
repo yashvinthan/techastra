@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import colors from '../../constants/colors';
 import ResumeDownload from './ResumeDownload';
 import mgrLogo from '../../assets/pictures/mgr_university_logo.png';
+import { apiUrl } from '../../services/apiConfig';
 
 export interface ContactProps {}
 
@@ -38,7 +39,7 @@ const Contact: React.FC<ContactProps> = (props) => {
         }
         setIsLoading(true);
         try {
-            const res = await fetch('/api/send-email', {
+            const res = await fetch(apiUrl('/api/send-email'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

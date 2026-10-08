@@ -58,6 +58,8 @@ export interface SubmissionPayload {
   executionTimeMs?: number;
 }
 
+import { apiUrl } from './apiConfig';
+
 class TelemetryService {
   private broadcastChannel: BroadcastChannel | null = null;
   private screenDebounceTimer: any = null;
@@ -93,7 +95,7 @@ class TelemetryService {
 
     // HTTP POST to server
     try {
-      const res = await fetch('/api/telemetry/heartbeat', {
+      const res = await fetch(apiUrl('/api/telemetry/heartbeat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload)
@@ -112,7 +114,7 @@ class TelemetryService {
   // Fetch official competition schedule from server
   public async fetchSchedule(): Promise<any> {
     try {
-      const res = await fetch('/api/competition/schedule', {
+      const res = await fetch(apiUrl('/api/competition/schedule'), {
         headers: { 'Accept': 'application/json' }
       });
       const ct = res.headers.get('content-type') || '';
@@ -177,7 +179,7 @@ class TelemetryService {
 
     // HTTP POST to server
     try {
-      await fetch('/api/proctoring/event', {
+      await fetch(apiUrl('/api/proctoring/event'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -199,7 +201,7 @@ class TelemetryService {
     this.screenDebounceTimer = setTimeout(async () => {
       this.lastLiveCode = payload.code;
       try {
-        await fetch('/api/telemetry/live-screen', {
+        await fetch(apiUrl('/api/telemetry/live-screen'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -216,7 +218,7 @@ class TelemetryService {
     if (!payload.participantId) return;
 
     try {
-      await fetch('/api/submissions', {
+      await fetch(apiUrl('/api/submissions'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

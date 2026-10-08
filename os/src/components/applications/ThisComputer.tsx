@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Window from '../os/Window';
+import { apiUrl } from '../../services/apiConfig';
 
 export interface ThisComputerProps extends WindowAppProps {}
 
@@ -26,7 +27,7 @@ const ThisComputerApp: React.FC<ThisComputerProps> = (props) => {
 
             // Quick latency check
             const start = performance.now();
-            fetch('/api/rounds')
+            fetch(apiUrl('/api/rounds'))
                 .then(() => {
                     const elapsed = Math.round(performance.now() - start);
                     setApiLatency(`${elapsed} ms (Optimal)`);

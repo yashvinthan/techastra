@@ -5,6 +5,7 @@
 // ============================================================================
 
 import { AdminUser } from '../types';
+import { apiUrl } from './apiConfig';
 
 const STORAGE_KEY = 'techastra_admin_session';
 let inactivityTimer: any = null;
@@ -40,7 +41,7 @@ export class AdminAuthService {
         ];
 
         try {
-            const response = await fetch('/api/admin/login', {
+            const response = await fetch(apiUrl('/api/admin/login'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ adminId: trimmedId, passkey: trimmedPasskey }),
@@ -141,7 +142,7 @@ export class AdminAuthService {
         try {
             sessionStorage.removeItem(STORAGE_KEY);
             if (token) {
-                fetch('/api/admin/logout', {
+                fetch(apiUrl('/api/admin/logout'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ token }),

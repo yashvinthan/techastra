@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AdminUser } from '../types';
+import { apiUrl } from '../services/apiConfig';
 
 interface DatabaseStats {
     participantsCount: number;
@@ -58,7 +59,7 @@ export const DatabaseResetPanel: React.FC<DatabaseResetPanelProps> = ({ user, on
     const fetchDatabaseStats = async () => {
         setLoadingStats(true);
         try {
-            const res = await fetch('/api/admin/database-stats', {
+            const res = await fetch(apiUrl('/api/admin/database-stats'), {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                 },
@@ -80,7 +81,7 @@ export const DatabaseResetPanel: React.FC<DatabaseResetPanelProps> = ({ user, on
     const fetchRoster = async () => {
         setLoadingRoster(true);
         try {
-            const res = await fetch('/api/coordinator/roster', {
+            const res = await fetch(apiUrl('/api/coordinator/roster'), {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                 },
@@ -111,7 +112,7 @@ export const DatabaseResetPanel: React.FC<DatabaseResetPanelProps> = ({ user, on
         setStatusMessage({ text: 'Executing database operation, please wait...', type: 'info' });
 
         try {
-            const res = await fetch('/api/admin/reset-database', {
+            const res = await fetch(apiUrl('/api/admin/reset-database'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

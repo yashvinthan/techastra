@@ -6,6 +6,7 @@
 // ============================================================================
 
 import { Submission } from '../types';
+import { apiUrl } from './apiConfig';
 
 export class SubmissionService {
     private static submissions: Submission[] = [];
@@ -43,7 +44,7 @@ export class SubmissionService {
     public static fetchSubmissions(): void {
         if (typeof fetch === 'undefined') return;
 
-        fetch('/api/submissions')
+        fetch(apiUrl('/api/submissions'))
             .then((res) => res.json())
             .then((data) => {
                 if (data && Array.isArray(data.submissions)) {

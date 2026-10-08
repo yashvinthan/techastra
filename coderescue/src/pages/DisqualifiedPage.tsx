@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCompetition } from '../context/CompetitionContext';
+import { apiUrl } from '../services/apiConfig';
 
 export const DisqualifiedPage: React.FC = () => {
   const { state, setView, pardonStrikesAndRestoreSession } = useCompetition();
@@ -13,7 +14,7 @@ export const DisqualifiedPage: React.FC = () => {
     if (!participant?.participantId) return;
     try {
       setChecking(true);
-      const res = await fetch(`/api/participants/${encodeURIComponent(participant.participantId)}`);
+      const res = await fetch(apiUrl(`/api/participants/${encodeURIComponent(participant.participantId)}`));
       const ct = res.headers.get('content-type') || '';
       if (res.ok && ct.includes('application/json')) {
         const data = await res.json();

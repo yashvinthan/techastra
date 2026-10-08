@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCompetition } from '../context/CompetitionContext';
 import { LeaderboardEntry } from '../types/competition';
+import { apiUrl } from '../services/apiConfig';
 
 export const LeaderboardPage: React.FC = () => {
   const { state, setView } = useCompetition();
@@ -10,7 +11,7 @@ export const LeaderboardPage: React.FC = () => {
 
   // Fetch live server standings from SQLite backend
   useEffect(() => {
-    fetch('/api/leaderboard')
+    fetch(apiUrl('/api/leaderboard'))
       .then(res => {
         const ct = res.headers.get('content-type') || '';
         if (res.ok && ct.includes('application/json')) {

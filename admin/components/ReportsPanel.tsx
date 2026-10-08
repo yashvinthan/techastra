@@ -11,6 +11,7 @@ import { SubmissionService } from '../services/submissionService';
 import { ProctoringService } from '../services/proctoringService';
 import { ParticipantService } from '../services/participantService';
 import { AdminAuthService } from '../services/adminAuthService';
+import { apiUrl } from '../services/apiConfig';
 
 interface ReportsPanelProps {
     participants?: Participant[];
@@ -52,7 +53,7 @@ export const ReportsPanel: React.FC<ReportsPanelProps> = ({ participants: initia
 
     const fetchScoreStatus = async () => {
         try {
-            const res = await fetch('/api/leaderboard');
+            const res = await fetch(apiUrl('/api/leaderboard'));
             const data = await res.json();
             if (data && typeof data.eventEnded === 'boolean') {
                 setEventEnded(data.eventEnded);
@@ -74,7 +75,7 @@ export const ReportsPanel: React.FC<ReportsPanelProps> = ({ participants: initia
 
         setTogglingScore(true);
         try {
-            const res = await fetch('/api/admin/toggle-event-ended', {
+            const res = await fetch(apiUrl('/api/admin/toggle-event-ended'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

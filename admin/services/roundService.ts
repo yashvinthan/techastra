@@ -7,6 +7,7 @@
 
 import { RoundId, RoundStatus, CompetitionSchedule } from '../types';
 import { AdminAuthService } from './adminAuthService';
+import { apiUrl } from './apiConfig';
 
 export class RoundService {
     private static rounds: RoundStatus[] = [
@@ -75,7 +76,7 @@ export class RoundService {
     public static fetchRounds(): void {
         if (typeof fetch === 'undefined') return;
 
-        fetch('/api/rounds')
+        fetch(apiUrl('/api/rounds'))
             .then((res) => res.json())
             .then((data) => {
                 if (data && Array.isArray(data.rounds) && data.rounds.length > 0) {
@@ -112,7 +113,7 @@ export class RoundService {
         }
 
         // Persist to backend database
-        fetch(`/api/rounds/${roundId}`, {
+        fetch(apiUrl(`/api/rounds/${roundId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ export class RoundService {
         }
 
         // Persist to backend database
-        fetch(`/api/rounds/${roundId}`, {
+        fetch(apiUrl(`/api/rounds/${roundId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -152,7 +153,7 @@ export class RoundService {
 
     public static async adjustRoundTimer(roundId: string, additionalSeconds?: number, setSeconds?: number): Promise<boolean> {
         try {
-            const res = await fetch('/api/rounds/adjust-timer', {
+            const res = await fetch(apiUrl('/api/rounds/adjust-timer'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -169,7 +170,7 @@ export class RoundService {
 
     public static async getSchedule(): Promise<CompetitionSchedule | null> {
         try {
-            const res = await fetch('/api/competition/schedule');
+            const res = await fetch(apiUrl('/api/competition/schedule'));
             const data = await res.json();
             if (data && data.success && data.schedule) {
                 return data.schedule as CompetitionSchedule;
@@ -182,7 +183,7 @@ export class RoundService {
 
     public static async updateSchedule(payload: { startTime?: string; endTime?: string; eventEnded?: boolean }): Promise<{ success: boolean; schedule?: CompetitionSchedule; error?: string }> {
         try {
-            const res = await fetch('/api/admin/schedule', {
+            const res = await fetch(apiUrl('/api/admin/schedule'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCompetition } from '../context/CompetitionContext';
 import { findMasterContestant } from '../data/masterRoster';
+import { apiUrl } from '../services/apiConfig';
 
 interface LiveContestant {
   registrationId?: string;
@@ -152,7 +153,7 @@ export const RegistrationPage: React.FC = () => {
   // Fetch stats to suggest the next slot number for on-spot signup
   useEffect(() => {
     const fetchStats = async () => {
-      const statsRes = await safeFetchJson('/api/participants/stats', undefined, 1500);
+      const statsRes = await safeFetchJson(apiUrl('/api/participants/stats'), undefined, 1500);
       if (statsRes.ok && statsRes.data && typeof statsRes.data.totalRegistered === 'number') {
         const nextSlot = 36 + statsRes.data.totalRegistered;
         setAssignedToken(`SYM2026-${String(nextSlot).padStart(4, '0')}`);
@@ -205,7 +206,7 @@ export const RegistrationPage: React.FC = () => {
     }
 
     // 3. Attempt live server lookup against backend (SQLite / Dr. M.G.R. portal sync)
-    const lookup = await safeFetchJson(`/api/coordinator/lookup/${encodeURIComponent(cleanCode)}`, undefined, 2500);
+    const lookup = await safeFetchJson(apiUrl(`/api/coordinator/lookup/${encodeURIComponent(cleanCode)}`), undefined, 2500);
     if (lookup.ok && lookup.data && lookup.data.success && lookup.data.found && lookup.data.participant) {
       const p = lookup.data.participant;
       const apiName = p.name && !p.name.startsWith('Contestant SYM') ? p.name : '';
@@ -274,7 +275,7 @@ export const RegistrationPage: React.FC = () => {
 
     // 1. Attempt server sync if backend is active
     const loginRes = await safeFetchJson(
-      '/api/participants/login',
+      apiUrl('/api/participants/login'),
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -447,7 +448,7 @@ export const RegistrationPage: React.FC = () => {
     });
 
     // Try posting to backend if server exists
-    await safeFetchJson('/api/participants/register', {
+    await safeFetchJson(apiUrl('/api/participants/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

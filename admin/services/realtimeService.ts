@@ -9,6 +9,7 @@ import { ProctoringService } from './proctoringService';
 import { RoundService } from './roundService';
 import { AnnouncementService } from './announcementService';
 import { LiveScreenService } from './liveScreenService';
+import { apiUrl } from './apiConfig';
 
 export type StreamConnectionStatus = 'CONNECTED' | 'CONNECTING' | 'OFFLINE';
 
@@ -56,7 +57,8 @@ export class RealtimeService {
         this.setStatus('CONNECTING');
 
         try {
-            const es = new EventSource('/api/stream');
+            const streamEndpoint = apiUrl('/api/stream');
+            const es = new EventSource(streamEndpoint);
             this.eventSource = es;
 
             es.onopen = () => {

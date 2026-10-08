@@ -6,6 +6,7 @@
 
 import { Announcement } from '../types';
 import { AdminAuthService } from './adminAuthService';
+import { apiUrl } from './apiConfig';
 
 export class AnnouncementService {
     private static announcements: Announcement[] = [];
@@ -36,7 +37,7 @@ export class AnnouncementService {
     public static fetchAnnouncements(): void {
         if (typeof fetch === 'undefined') return;
 
-        fetch('/api/announcements')
+        fetch(apiUrl('/api/announcements'))
             .then(res => res.json())
             .then(data => {
                 if (data && Array.isArray(data.announcements)) {
@@ -78,7 +79,7 @@ export class AnnouncementService {
         }
 
         // Persist to backend database and trigger real-time SSE broadcast if online
-        fetch('/api/announcements', {
+        fetch(apiUrl('/api/announcements'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

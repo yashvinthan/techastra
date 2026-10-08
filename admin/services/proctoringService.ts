@@ -6,6 +6,7 @@
 
 import { SecurityEvent } from '../types';
 import { ParticipantService } from './participantService';
+import { apiUrl } from './apiConfig';
 
 export class ProctoringService {
     private static events: SecurityEvent[] = [];
@@ -43,7 +44,7 @@ export class ProctoringService {
     public static fetchEvents(): void {
         if (typeof fetch === 'undefined') return;
 
-        fetch('/api/telemetry/events')
+        fetch(apiUrl('/api/telemetry/events'))
             .then((res) => res.json())
             .then((data) => {
                 if (data && Array.isArray(data.events)) {

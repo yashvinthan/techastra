@@ -7,6 +7,7 @@
 import { Participant, ParticipantStatus, RoundId } from '../types';
 import { ProctoringService } from './proctoringService';
 import { AdminAuthService } from './adminAuthService';
+import { apiUrl } from './apiConfig';
 
 export class ParticipantService {
     private static participants: Participant[] = [];
@@ -110,7 +111,7 @@ export class ParticipantService {
     public static pollServerTelemetry(): void {
         if (typeof fetch === 'undefined') return;
 
-        fetch('/api/telemetry/participants')
+        fetch(apiUrl('/api/telemetry/participants'))
             .then((res) => res.json())
             .then((data) => {
                 if (data && Array.isArray(data.participants)) {
@@ -229,7 +230,7 @@ export class ParticipantService {
         }
 
         try {
-            const res = await fetch('/api/telemetry/flag', {
+            const res = await fetch(apiUrl('/api/telemetry/flag'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -271,7 +272,7 @@ export class ParticipantService {
         }
 
         try {
-            const res = await fetch('/api/telemetry/reinstate', {
+            const res = await fetch(apiUrl('/api/telemetry/reinstate'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -291,7 +292,7 @@ export class ParticipantService {
 
     public static async adjustParticipantTimer(id: string, additionalSeconds?: number, setSeconds?: number): Promise<{ success: boolean; error?: string; timeRemaining?: number }> {
         try {
-            const res = await fetch(`/api/participants/${encodeURIComponent(id)}/adjust-timer`, {
+            const res = await fetch(apiUrl(`/api/participants/${encodeURIComponent(id)}/adjust-timer`), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -328,7 +329,7 @@ export class ParticipantService {
         }
 
         try {
-            const res = await fetch(`/api/participants/${encodeURIComponent(id)}/reset-session`, {
+            const res = await fetch(apiUrl(`/api/participants/${encodeURIComponent(id)}/reset-session`), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -366,7 +367,7 @@ export class ParticipantService {
         year: string;
     }): Promise<{ success: boolean; error?: string; participant?: any }> {
         try {
-            const res = await fetch('/api/participants/register', {
+            const res = await fetch(apiUrl('/api/participants/register'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

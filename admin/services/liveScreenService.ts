@@ -4,6 +4,7 @@
 // ============================================================================
 
 import { LiveScreenData } from '../types';
+import { apiUrl } from './apiConfig';
 
 export class LiveScreenService {
     private static screens: Map<string, LiveScreenData> = new Map();
@@ -43,7 +44,7 @@ export class LiveScreenService {
 
     public static refreshScreens(): void {
         if (typeof fetch === 'undefined') return;
-        fetch('/api/telemetry/live-screens')
+        fetch(apiUrl('/api/telemetry/live-screens'))
             .then(res => res.json())
             .then(data => {
                 if (data && Array.isArray(data.screens)) {

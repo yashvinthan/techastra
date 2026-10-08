@@ -20,6 +20,7 @@ import { ReportsPanel } from './ReportsPanel';
 import { LiveScreensMatrix } from './LiveScreensMatrix';
 import { DatabaseResetPanel } from './DatabaseResetPanel';
 import { ErrorBoundary } from './ErrorBoundary';
+import { apiUrl } from '../services/apiConfig';
 
 type DashboardTab = 'participants' | 'screens' | 'proctoring' | 'submissions' | 'rounds' | 'announcements' | 'reports' | 'database';
 
@@ -52,7 +53,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
 
     const fetchSystemStats = async () => {
         try {
-            const res = await fetch('/api/admin/system-stats', {
+            const res = await fetch(apiUrl('/api/admin/system-stats'), {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                     'Accept': 'application/json',
@@ -118,7 +119,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
 
         setIsTogglingScore(true);
         try {
-            const res = await fetch('/api/admin/toggle-event-ended', {
+            const res = await fetch(apiUrl('/api/admin/toggle-event-ended'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -196,7 +197,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
                         className="admin-btn admin-btn-primary"
                         onClick={async () => {
                             try {
-                                const res = await fetch('/api/coordinator/sync', { method: 'POST' });
+                                const res = await fetch(apiUrl('/api/coordinator/sync'), { method: 'POST' });
                                 const d = await res.json();
                                 alert(d.success ? `Successfully synced ${d.synced} contestants from Techastra Event Portal!` : `Sync error: ${d.error}`);
                                 ParticipantService.pollServerTelemetry();
